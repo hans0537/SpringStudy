@@ -25,7 +25,7 @@ public class AdminUserController {
 
     @GetMapping("/users")
     public MappingJacksonValue retrieveAllUsers() {
-        List<User> users = service.findAll();
+        List<Users> users = service.findAll();
 
         SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter
                 .filterOutAllExcept("id", "name", "joinDate", "ssn");
@@ -43,7 +43,7 @@ public class AdminUserController {
 //    @GetMapping(value = "/users/{id}", headers = "X-API-VERSION=1")
     @GetMapping(value = "/users/{id}", produces = "application/vnd.company.appv1+json")
     public MappingJacksonValue retrieveUserV1(@PathVariable int id) {
-        User user = service.findOne(id);
+        Users user = service.findOne(id);
 
         // 예외 처리를 통해 에러 코드도 클라이언트 측에 보내주고
         // 특정 예외 메세지를 보내 줄 수 있다
@@ -66,7 +66,7 @@ public class AdminUserController {
 //    @GetMapping(value = "/users/{id}", headers = "X-API-VERSION=2")
     @GetMapping(value = "/users/{id}", produces = "application/vnd.company.appv2+json")
     public MappingJacksonValue retrieveUserV2(@PathVariable int id) {
-        User user = service.findOne(id);
+        Users user = service.findOne(id);
 
         // 예외 처리를 통해 에러 코드도 클라이언트 측에 보내주고
         // 특정 예외 메세지를 보내 줄 수 있다

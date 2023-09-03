@@ -15,6 +15,6 @@ import java.util.Date;
 // 특정 데이터를 안보여주기 위함
 //@JsonIgnoreProperties(value={"password"})
 @JsonFilter("UserInfoV2")
-public class UserV2 extends User{
+public class UserV2 extends Users{
     private String grade;
 }
