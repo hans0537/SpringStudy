@@ -3,8 +3,8 @@ server:
 
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
+    register-with-eureka: true
+    fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
 
@@ -13,20 +13,36 @@ spring:
     name: apigateway-service
   cloud:
     gateway:
+#      default-filters에 GlobalFilter 정보들을 등록하면 모든 곳에 필터 적용
+      default-filters:
+        - name: GlobalFilter
+          args:
+            baseMessage: Spring CloudGateway Global Filter
+            preLogger: true
+            postLogger: true
       routes:
         - id: first-service
-          uri: http://localhost:8081/
-          # \uC870\uAC74\uC808
+#          로드밸런싱으로 등록 (eureka application 이름으로 등록)
+          uri: lb://MY-FIRST-SERVICE
+          # 조건을 부여
           predicates:
             - Path=/fist-service/**
           filters:
-            - AddRequestHeader=first-request, first-request-header2
-            - AddResponseHeader=first-response, first-response-header2
+#            - AddRequestHeader=first-request, first-request-header2
+#            - AddResponseHeader=first-response, first-response-header2
+            - CustomFilter
         - id: second-service
-          uri: http://localhost:8082/
-          # \uC870\uAC74\uC808
+          uri: lb://MY-SECOND-SERVICE
+          # 조건을 부여
           predicates:
             - Path=/second-service/**
           filters:
-            - AddRequestHeader=second-request, second-request-header2
-            - AddResponseHeader=second-response, second-response-header2
+#            - AddRequestHeader=second-request, second-request-header2
+#            - AddResponseHeader=second-response, second-response-header2
+#            필터를 여러개 넣을려면 name을 부여
+            - name: CustomFilter
+            - name: LoggingFilter
+              args:
+                baseMessage: Hi, there
+                preLogger: true
+                postLogger: true
