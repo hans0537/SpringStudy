@@ -1,0 +1,40 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: catalog-service
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    defer-datasource-initialization: true
+    generate-ddl: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+
+eureka:
+  instance:
+    # eureka \uC5D0 \uB4F1\uB85D\uB41C \uC11C\uBE44\uC2A4 \uBA85\uC744 \uBCF4\uC5EC\uC8FC\uB824\uBA74
+    #     instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.port}}
+    #    instance-id: ${spring.application.name}:${server.port}
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    # eureka \uC5D0 \uD574\uB2F9 \uC11C\uBE44\uC2A4 \uB4F1\uB85D
+    register-with-eureka: true
+    # eureka \uC11C\uBC84\uB85C\uBD80\uD130 \uC778\uC2A4\uD134\uB4E4\uC758 \uC815\uBCF4\uB97C \uC8FC\uAE30\uC801\uC73C\uB85C \uC815\uBCF4\uB97C \uAC00\uC838\uC624\uB3C4\uB85D \uC124\uC815
+    fetch-registry: true
+    # \uB4F1\uB85D\uD560 eureka \uC11C\uBC84\uC758 \uC704\uCE58
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+logging:
+  level:
+    com.example.catalogservice: DEBUG

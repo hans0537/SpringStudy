@@ -1,18 +1,32 @@
 server:
   #  0번 포트를 할당하면 자동으로 포트번호가 할당된다
-  #  port: 0
+    port: 0
   # 만약 포트 번호를 eureka에 보여주려면 아래와 같이 랜덤 함수를 사용후
-  port: ${random.int(50000,51000)}
+#  port: ${random.int(50000,51000)}
 
 spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+  jpa:
+    show-sql: true
+    defer-datasource-initialization: true
   application:
     name: user-service
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
 
 eureka:
   instance:
     # eureka 에 등록된 서비스 명을 보여주려면
-    # instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.port}}
-    instance-id: ${spring.application.name}:${server.port}
+#     instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.port}}
+#    instance-id: ${spring.application.name}:${server.port}
+     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     # eureka 에 해당 서비스 등록
     register-with-eureka: true
@@ -22,5 +36,5 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka
 
-
-
+greeting:
+  message: Welcome to the simple E-commerce.

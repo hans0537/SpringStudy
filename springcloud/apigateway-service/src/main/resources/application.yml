@@ -21,6 +21,24 @@ spring:
             preLogger: true
             postLogger: true
       routes:
+        - id: user-service
+          # 로드밸런싱으로 등록 (eureka application 이름으로 등록)
+          uri: lb://USER-SERVICE
+          # 조건을 부여
+          predicates:
+            - Path=/user-service/**
+        - id: catalog-service
+          # 로드밸런싱으로 등록 (eureka application 이름으로 등록)
+          uri: lb://CATALOG-SERVICE
+          # 조건을 부여
+          predicates:
+            - Path=/catalog-service/**
+        - id: order-service
+          # 로드밸런싱으로 등록 (eureka application 이름으로 등록)
+          uri: lb://ORDER-SERVICE
+          # 조건을 부여
+          predicates:
+            - Path=/order-service/**
         - id: first-service
 #          로드밸런싱으로 등록 (eureka application 이름으로 등록)
           uri: lb://MY-FIRST-SERVICE
