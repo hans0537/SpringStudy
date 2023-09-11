@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-service")
+//@RequestMapping("/user-service")
+@RequestMapping("/") // apigateway 설정에서 불필요한 path 설정 했음
 public class UserController {
     private Environment env;
     private UserService userService;

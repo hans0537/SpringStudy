@@ -21,12 +21,41 @@ spring:
             preLogger: true
             postLogger: true
       routes:
+#        - id: user-service
+#          # 로드밸런싱으로 등록 (eureka application 이름으로 등록)
+#          uri: lb://USER-SERVICE
+#          # 조건을 부여
+#          predicates:
+#            - Path=/user-service/**
         - id: user-service
-          # 로드밸런싱으로 등록 (eureka application 이름으로 등록)
           uri: lb://USER-SERVICE
-          # 조건을 부여
+          predicates:
+            - Path=/user-service/login
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        # 위 로그인과 회원가입 경로는 인증절차를 안받는다. 나머지 경로는 JWT 토큰 받게 함
+        # 만약 다른 경로도 JWT가 필요 없다면 위로 따로 뺀다
+        - id: user-service
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
         - id: catalog-service
           # 로드밸런싱으로 등록 (eureka application 이름으로 등록)
           uri: lb://CATALOG-SERVICE
@@ -64,3 +93,7 @@ spring:
                 baseMessage: Hi, there
                 preLogger: true
                 postLogger: true
+
+token:
+  # 어떤 키를 가지고 생성할지
+  secret: user_token

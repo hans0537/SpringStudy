@@ -1,51 +1,67 @@
 package com.example.userservice.security;
 
+import com.example.userservice.service.UserService;
+import com.example.userservice.service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableWebSecurity
 // spring security 6.1 버전 설정 참고 링크
 // https://velog.io/@shon5544/Spring-Security-1.-%EC%84%A4%EC%A0%95
-public class WebSecurity {
-    @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        return http
-                // stateless한 rest api를 개발할 것이므로 csrf 공격에 대한 옵션은 꺼둔다.
-                .csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers
-                        .frameOptions(frameOptions -> frameOptions.disable())
-                )
-                // 특정 URL에 대한 권한 설정.
-                .authorizeHttpRequests((authorizeRequests) -> {
-//                    authorizeRequests.requestMatchers("/user/**").authenticated();
-//
-//                    authorizeRequests.requestMatchers("/manager/**")
-//                            // ROLE_은 붙이면 안 된다. hasAnyRole()을 사용할 때 자동으로 ROLE_이 붙기 때문이다.
-//                            .hasAnyRole("ADMIN", "MANAGER");
-//
-//                    authorizeRequests.requestMatchers("/admin/**")
-//                            // ROLE_은 붙이면 안 된다. hasRole()을 사용할 때 자동으로 ROLE_이 붙기 때문이다.
-//                            .hasRole("ADMIN");
-//
-                    authorizeRequests.anyRequest().permitAll();
-                })
-//
-//                .formLogin((formLogin) -> {
-//                    /* 권한이 필요한 요청은 해당 url로 리다이렉트 */
-//                    formLogin.loginPage("/login");
-//                })
+public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-                .build();
+    private UserService userService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private Environment env;
+
+    @Autowired
+    public WebSecurity(Environment env, UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.env = env;
+        this.userService = userService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
 
+    // select pwd from users where email = ?
+    // db_pwd(encrypted) == input_pwd(encrypted)
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserServiceImpl();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception  {
+
+        http.csrf().disable();
+        // stateless한 rest api를 개발할 것이므로 csrf 공격에 대한 옵션은 꺼둔다.
+        http.authorizeRequests().antMatchers("/**")
+                .hasIpAddress("192.168.100.74")
+                .and()
+                .addFilter(getAuthenticationFilter());
+        http.headers().frameOptions().disable();
+
+    }
+
+    private AuthenticationFilter getAuthenticationFilter() throws Exception {
+        AuthenticationFilter authenticationFilter =
+                new AuthenticationFilter(authenticationManager(), userService, env);
+//        authenticationFilter.setAuthenticationManager(authenticationManager());
+        return authenticationFilter;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+    }
 }
