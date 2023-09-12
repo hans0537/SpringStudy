@@ -56,6 +56,16 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
         - id: catalog-service
           # 로드밸런싱으로 등록 (eureka application 이름으로 등록)
           uri: lb://CATALOG-SERVICE
@@ -97,3 +107,11 @@ spring:
 token:
   # 어떤 키를 가지고 생성할지
   secret: user_token
+
+# configure 서버에 있는 파일이 변경 될때 마다 재부팅 안하고 actuator를 사용하여 최신화
+management:
+  endpoints:
+    web:
+      exposure:
+        # refresh : MSA에 있는 configuration 서버에서 가지고 와야할 정보를 refresh
+        include: refresh, health, beans, httptrace

@@ -43,8 +43,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception  {
 
-        http.csrf().disable();
         // stateless한 rest api를 개발할 것이므로 csrf 공격에 대한 옵션은 꺼둔다.
+        http.csrf().disable();
+
+        // acutator는 모두 허용
+        http.authorizeRequests().antMatchers("/actuator/**").permitAll();
+
+
         http.authorizeRequests().antMatchers("/**")
                 .hasIpAddress("192.168.100.74")
                 .and()

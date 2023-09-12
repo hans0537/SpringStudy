@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    config:
+      #      repository에 포함한 설정 파일에 대한 정보 등록
+      uri: http://127.0.0.1:8888
+      name: ecommerce
+# 파일명-<dev>
+  profiles:
+    active: dev

@@ -43,8 +43,16 @@ logging:
   level:
     com.example.userservice: DEBUG
 
-token:
-  # 만료 기간
-  expiration_time: 86400000
-  # 어떤 키를 가지고 생성할지
-  secret: user_token
+# configure 서버에 있는 파일이 변경 될때 마다 재부팅 안하고 actuator를 사용하여 최신화
+management:
+  endpoints:
+    web:
+      exposure:
+        # refresh : MSA에 있는 configuration 서버에서 가지고 와야할 정보를 refresh
+        include: refresh, health, beans
+
+#token:
+#  # 만료 기간
+#  expiration_time: 86400000
+#  # 어떤 키를 가지고 생성할지
+#  secret: user_token
