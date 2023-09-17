@@ -1,0 +1,12 @@
+token:
+  # 만료 기간
+  expiration_time: 86400000
+  # 어떤 키를 가지고 생성할지
+  secret: "{cipher}AQBifU8vFI3A7ijkdNBNgXQF/YiR/rm5FgTW1+VI+Rr+/wW6S97AAdhNAS80I+R5PvEC94nm3N7860qO32QHmB7yrm5CtLGjsFhs2Hw856Dc9DYWzMQzbuRqStHHdtzEDMYW+FjISTngKWNkDHwvvsmXbzXRhF2t/bdmtEiqeCsPtgE70Gx8RhE/PA1ojbjnk1VW4v7EVI7IkUG4F/PeACZ+cSBhkPjN2VOVFX6x2/7bAdOL0yD3ZM5tpG+PANLm0hzvyYMm71utDDrJ7g/J0wUFxxJvU9yxdQ5jmoq2MbJMRceN6kr16qJ8ynQ6IbxSb65Sg8AuAifpUCZ/9tFhjwRN5ledyCGHfJYzM0GOBv+JlugSt+ncFDy2ggXLoRRLD+2CHPujaSpxdHlRAwr51naC"
+
+gateway:
+  ip: 192.168.100.74
+
+
+
+  

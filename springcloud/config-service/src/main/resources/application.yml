@@ -4,8 +4,32 @@ server:
 spring:
   application:
     name: config-service
+  # rabbitmq 연동 (포트번호: 5672)
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+  # 직접적인 파일경로로 설정 파일 불러오는 방법
+  profiles:
+    active: native
   cloud:
     config:
       server:
+        native: # 직접적인 파일경로로 설정 파일 불러오는 방법
+          search-locations: file:///C:/Users/SSAFY/Desktop/SpringStudy/springcloud/native-file-repo
+        # 외부 에서 설정 파일 불러오는 방법
         git:
-          uri: file://C:\Users\SSAFY\Desktop\git-local-repo
+          # 로컬 파일 깃 주소
+          # uri: file://C:\Users\SSAFY\Desktop\git-local-repo
+          # 리모트 주소 (github)
+          uri: https://github.com/hans0537/spring-cloud-config
+          # private 이면
+#          username: [username]
+#          password: [password]
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh

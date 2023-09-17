@@ -5,15 +5,24 @@ server:
 #  port: ${random.int(50000,51000)}
 
 spring:
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
+  application:
+    name: user-service
+  # rabbitmq 연동 (포트번호: 5672)
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+#  cloud config store에서 관리
+
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:testdb
+#    username: sa
   jpa:
     show-sql: true
     defer-datasource-initialization: true
-  application:
-    name: user-service
   h2:
     console:
       enabled: true
@@ -41,7 +50,7 @@ greeting:
   
 logging:
   level:
-    com.example.userservice: DEBUG
+    com.example.userservice.client: DEBUG
 
 # configure 서버에 있는 파일이 변경 될때 마다 재부팅 안하고 actuator를 사용하여 최신화
 management:
@@ -49,7 +58,7 @@ management:
     web:
       exposure:
         # refresh : MSA에 있는 configuration 서버에서 가지고 와야할 정보를 refresh
-        include: refresh, health, beans
+        include: refresh, health, beans, busrefresh
 
 #token:
 #  # 만료 기간

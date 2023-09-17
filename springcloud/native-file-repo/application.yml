@@ -1,0 +1,12 @@
+token:
+  # 만료 기간
+  expiration_time: 86400000
+  # 어떤 키를 가지고 생성할지
+  secret: user_token_native_application_changed_#2
+
+gateway:
+  ip: 192.168.100.74
+
+
+
+  

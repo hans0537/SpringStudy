@@ -2,6 +2,7 @@ package com.example.orderservice.controller;
 
 import com.example.orderservice.dto.OrderDto;
 import com.example.orderservice.jpa.OrderEntity;
+import com.example.orderservice.messeagequeue.KafkaProducer;
 import com.example.orderservice.service.OrderService;
 import com.example.orderservice.vo.RequestOrder;
 import com.example.orderservice.vo.ResponseOrder;
@@ -21,11 +22,13 @@ import java.util.List;
 public class OrderController {
     OrderService orderService;
     Environment env;
+    KafkaProducer kafkaProducer;
 
     @Autowired
-    public OrderController(OrderService orderService, Environment env) {
+    public OrderController(OrderService orderService, Environment env, KafkaProducer kafkaProducer) {
         this.orderService = orderService;
         this.env = env;
+        this.kafkaProducer = kafkaProducer;
     }
 
     @GetMapping("/health_check")
@@ -38,11 +41,16 @@ public class OrderController {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
+        /* jpa 부분*/
         OrderDto orderDto = mapper.map(order, OrderDto.class);
         orderDto.setUserId(userId);
         OrderDto createdOrder = orderService.createOrder(orderDto);
 
         ResponseOrder responseOrder = mapper.map(createdOrder, ResponseOrder.class);
+
+        /* send this order to the kafka */
+        kafkaProducer.send("example-category-topic", orderDto);
+
 
         // 반환 값을 ResponseEntity를 사용하여
         // 로그인한 객체와, Status 201 CREATED로 반환 해줌

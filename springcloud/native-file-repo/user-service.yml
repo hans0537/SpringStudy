@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    # 일반적인 문자열이 아닌 암호화된 거라는거 표시
+    password: '{cipher}AQAYSY/TEExSSSG7Tia7qwLC/dJjd/GUSzMmMGPv1h1+Y+kJxoq8rm1POZAsiMHIPHaJ7nJbPbE/8wLjf/jUI8GOJfZuo+NOGGZLYO5Fj0FcEA6XsUswGlduEwzoYEicPslJIkBVqPODBAR+DS54N8nKhjf1XRAOZa+TnyppsuXbUMjuoXI58FlIGmaJA9MWc8CIp+/EGz0gNXA/M0Qk7khYU564tKGdCQhiV8T0cAwZSVa9OVYLdzetHAIZgRfJZKWi+kKT7ZhM4feWOJ4d3omK0APGukhYQVaVpbKDFUjuqBZwKuZk2AIPOFsUDlkvUGSMsD8QtES5N2NoTzYKg5Oguc6+mjXsWUkUZtZrgfLOCbt/Xkp9DI/1DncOghFdvF4='
+
+token:
+  # 만료 기간
+  expiration_time: 86400000
+  # 어떤 키를 가지고 생성할지
+  secret: "{cipher}AQBifU8vFI3A7ijkdNBNgXQF/YiR/rm5FgTW1+VI+Rr+/wW6S97AAdhNAS80I+R5PvEC94nm3N7860qO32QHmB7yrm5CtLGjsFhs2Hw856Dc9DYWzMQzbuRqStHHdtzEDMYW+FjISTngKWNkDHwvvsmXbzXRhF2t/bdmtEiqeCsPtgE70Gx8RhE/PA1ojbjnk1VW4v7EVI7IkUG4F/PeACZ+cSBhkPjN2VOVFX6x2/7bAdOL0yD3ZM5tpG+PANLm0hzvyYMm71utDDrJ7g/J0wUFxxJvU9yxdQ5jmoq2MbJMRceN6kr16qJ8ynQ6IbxSb65Sg8AuAifpUCZ/9tFhjwRN5ledyCGHfJYzM0GOBv+JlugSt+ncFDy2ggXLoRRLD+2CHPujaSpxdHlRAwr51naC"
+
+
+gateway:
+  ip: 192.168.100.74
+
+order_service:
+  url: http://ORDER-SERVICE/order-service/%s/orders
+  exception: 
+    orders_is_empty: User's orders is empty
+
+  

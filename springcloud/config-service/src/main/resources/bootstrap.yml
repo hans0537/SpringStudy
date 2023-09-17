@@ -1,0 +1,11 @@
+# 대칭키: 암호화, 복호화 키가 동일
+encrypt:
+#  key: abcdefghijklmnopqrstuvwxyz0123456789
+
+# 비대칭키: 암호화, 복호화 키가 동일 X
+# RSA 알고리즘
+  key-store:
+#    location: file:///C:/Users/SSAFY/Desktop/SpringStudy/springcloud/keystore/apiEncryptionKey.jks
+    location: file:/apiEncryptionKey.jks
+    password: test1234
+    alias: apiEncryptionKey

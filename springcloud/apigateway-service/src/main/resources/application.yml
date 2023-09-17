@@ -2,6 +2,8 @@ server:
   port: 8000
 
 eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     register-with-eureka: true
     fetch-registry: true
@@ -11,6 +13,12 @@ eureka:
 spring:
   application:
     name: apigateway-service
+  # rabbitmq 연동 (포트번호: 5672)
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   cloud:
     gateway:
 #      default-filters에 GlobalFilter 정보들을 등록하면 모든 곳에 필터 적용
@@ -104,9 +112,9 @@ spring:
                 preLogger: true
                 postLogger: true
 
-token:
-  # 어떤 키를 가지고 생성할지
-  secret: user_token
+#token:
+#  # 어떤 키를 가지고 생성할지
+#  secret: user_token
 
 # configure 서버에 있는 파일이 변경 될때 마다 재부팅 안하고 actuator를 사용하여 최신화
 management:
@@ -114,4 +122,5 @@ management:
     web:
       exposure:
         # refresh : MSA에 있는 configuration 서버에서 가지고 와야할 정보를 refresh
-        include: refresh, health, beans, httptrace
+        include: refresh, health, beans, httptrace, busrefresh
+
